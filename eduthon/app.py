@@ -184,7 +184,7 @@ def unauthorized():
 def delete(Cid):
     if User.query.get(current_user.get_id()).username != admin_password:
         return redirect(url_for('landing'))
-    questions_p = Question.query.filter(Contest.id == Cid).all()
+    questions_p = Question.query.filter(Question.contest_id == Cid).all()
     con_name = Contest.query.get(Cid).name
     for i in questions_p:
         quest = Practice_question(name = i.name,question_text = i.question_text,answer = i.answer,contest_name = con_name)

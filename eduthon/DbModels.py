@@ -50,7 +50,7 @@ class User(UserMixin,db.Model):
 
 class Practice_question(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(100),unique = True)
+    name = db.Column(db.String(100))
     question_text = db.Column(db.String(500),unique=False)
     answer = db.Column(db.Float , unique = False)
     contest_name = db.Column(db.String(100))
