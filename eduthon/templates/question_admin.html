@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <style>
+        .main{
+            font-size: 20px;
+        }
+        #qin{
+            width: 90%;
+            height: 100px;
+            font-size: 20px;
+        }
+        #name{
+            width: 50%;
+            height:100%;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <form method="POST">
+       <label for="qinn">Type name of the question:</label>
+       <br>
+       <div>
+           <input type="text" name="q_name">
+       </div>
+       <br><br>
+        <label for="qinn">Type your question:</label>
+        <br>
+        <div class="ques">
+            <textarea type="text" id="qin" name="q_text">
+            </textarea>
+        </div>
+        <br><br>
+        <label for="qinn">Type answer of the above question(make sure that this should be correct):</label>
+        <br>
+        <div class="ques">
+            <input type="text" name="q_ans">
+        </div>
+        <br><br>
+        <div>
+            <input type="submit">
+        </div>
+        </form>
+    </div>
+</body>
+</html>
