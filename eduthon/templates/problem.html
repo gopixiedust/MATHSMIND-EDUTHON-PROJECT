@@ -7,13 +7,21 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <title>Problem</title>
+    <script>
+
+        {% if response == -1 %}
+        alert('WRONG ANSWER')
+        {% elif response == 1 %}
+        alert('RIGHT ANSWER')
+        {% endif %}
+    </script>
     <style>
         body,
         html {
             margin: 0;
             padding: 20px;
             font-family: sans-serif;
-            background: url("aman.jpg") no-repeat center center fixed;
+            background: url("{{ url_for('static',filename = 'aman.jpg') }}") no-repeat center center fixed;
             background-size: cover;
             width: 100%;
             height: 100%;
@@ -68,14 +76,16 @@
         }
 
         .container button {
-            margin-left: 35px;
+            margin-left: 0px;
             border-radius: 20px;
             padding-left: 25px;
             padding-right: 25px;
             padding-top: 8px;
             padding-bottom: 8px;
             outline: none;
-            background: rgb(252, 147, 252);
+            background: rgba(255, 77, 148,0.8);
+            font-weight: 550;
+            letter-spacing: 0.9px;
             color: white;
             font-size: 12px;
             border: none;
@@ -86,6 +96,27 @@
 
         .container button:hover {
             transform: scale(1.2);
+            background: rgba(255, 77, 148,1.0);
+            box-shadow: 0 7px 20px rgba(255, 77, 148,0.6);
+            cursor:pointer;
+        }
+        .container input:hover {
+            transform: scale(1.05);
+
+        }
+        #tohover1{
+            font-size:20px;
+            transform: scale(1.1);
+            color: rgba(255, 77, 148,0.8);
+            letter-spacing: 0.9px;
+        }
+        #tohover2{
+            font-size:20px;
+            letter-spacing: 0.9px;
+        }
+        #tohover2:hover{
+            transform: scale(1.1);
+            color: rgba(255, 77, 148,0.8);
         }
     </style>
 </head>
@@ -93,13 +124,14 @@
 <body>
     <nav id="sideNav">
         <ul>
-            <li><a href="#">HOME</a></li>
-            <li><a href="#">CONTEST</a></li>
-            <li><a href="#">PRACTICE</a></li>
-            <li><a href="#">LEADERBOARD</a></li>
+            <li><a href="/">HOME</a></li>
+            <li><a href="/index">CONTEST</a></li>
+            <li><a href="/practice/1">PRACTICE</a></li>
+            <li><a href="/standings">LEADERBOARD</a></li>
+            <li><a href="/logout">LOGOUT</a></li>
         </ul>
     </nav>
-    <img src="menu.png" id="menuBtn">
+    <img src="{{ url_for('static',filename = 'menu.png') }}" id="menuBtn">
     <script>
         var menuBtn = document.getElementById("menuBtn");
         var sideNav = document.getElementById("sideNav");
@@ -124,44 +156,43 @@
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Contest Page<span class="sr-only">(current)</span></a>
+                    <a class="nav-link"   id="tohover1" href="/contest/{{contest.id}}">Contest Page<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Leaderboard</a>
+                    <a class="nav-link"   id="tohover2" href="/leaderboard/{{contest.id}}">Leaderboard</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#">kya hiii</a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </nav>
     <br><br>
     <br><br>
-    <h1 style="text-align:center">CONTEST XYZ</h1>
+    <h1 style="text-align:center">{{contest.name}}</h1>
     <br><br>
     <div class="container">
         <div class="row row2" style="text-align:center; font-size:30px; font-weight:bold;">
             <div class="col-xl-12">
-                A.SUM1
+                {{name}}
             </div>
         </div>
         <div class="row row2" style="margin-top:30px;text-align:center;">
             <div class="col-xl-12">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quia quasi eveniet
-                delectus doloribus quidem ipsam vero optio repudiandae fugit nobis, numquam alias quibusdam quae ea
-                ad velit voluptate quaerat excepturi iusto. Mollitia expedita, architecto eos consectetur vitae rem
-                esse delectus.
+               {{text}}
+            </div>
+        </div>
+        <br><br>
+        <form method="POST">
+        <div class="row row2" style="text-align:center;">
+            <div class="col-xl-12"><input type="text" placeholder=" Enter your Answer" name="answer" autocomplete="off">
             </div>
         </div>
         <br><br>
         <div class="row row2" style="text-align:center;">
-            <div class="col-xl-12"><input type="text" placeholder="Enter your Answer">
-            </div>
+            <div class="col-xl-12"><button type="submit" formmethod="post">SUBMIT</button></div>
         </div>
-        <br><br>
-        <div class="row row2" style="text-align:center;">
-            <div class="col-xl-12"><button>SUBMIT</button></div>
-        </div>
+        </form>
     </div>
     <br><br>
 </body>

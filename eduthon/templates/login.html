@@ -71,6 +71,11 @@
             background: transparent;
             outline: none;
             border-bottom: 2px solid rgb(13, 94, 199);
+            width:170px;
+            transition: .5s;
+        }
+        header input:hover {
+            transform: scale(1.2);
         }
 
         header button {
@@ -81,9 +86,12 @@
             padding-top: 8px;
             padding-bottom: 8px;
             outline: none;
-            background: rgb(252, 147, 252);
+            background: rgba(255, 77, 148,0.8);
+
             color: white;
             font-size: 12px;
+            font-weight: 550;
+            letter-spacing: 0.9px;
             border: none;
             transition: .5s;
             animation: headShake;
@@ -92,6 +100,14 @@
 
         header button:hover {
             transform: scale(1.2);
+            background: rgba(255, 77, 148,1.0);
+            box-shadow: 0 7px 20px rgba(255, 255, 255,0.6);
+            
+            cursor:pointer;
+        }
+        ::placeholder { 
+          font-size: 14px;
+          font-weight: 500;
         }
     </style>
 
@@ -106,17 +122,63 @@
             <hr>
             </hr>
             <br>
-            <form method="POST">
-            <p><input type="text" placeholder="Username" name='username'></input></p>
+            <form  name="myform" onsubmit="return validateform()"  method = 'POST' autocomplete="off">
+            <p><input type="text" placeholder=" Username" name="username" required></input></p>
             <br>
-            <p><input type="password" placeholder="Password" name='password'></input></p>
+            <p><input type="password" placeholder=" Password" name="password" required></input></p>
             <br>
-            <p><button type="submit" formmethod="post">Submit</button></p>
-            <form>
+            <p><button type="submit" formmethod="post" value="Submit">SUBMIT</button></p>
+            </form>
         </div>
     </header>
 
+<script>
+    {% if exist %}
+    alert('Either Username or password is wrong')
+    {% endif %}
+    function validateform(){
+        var letters=/^[a-zA-Z]+$/;
+        var check= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        var valusername=document.forms["myform"]["username"].value;        
+        var valpassword=document.forms["myform"]["password"].value;         
+       
+        if(valusername==""){
+            alert("Username can not be empty");
+            return false;
+        }
 
+        if(valusername.indexOf(' ')>=0){
+            alert("\tInvalid Username !!\nCan not contain white space");
+            return false;
+        }
+
+        if(!(valusername[0].match(letters))){
+            alert("\tInvalid Username !!\nShould start with Alphabet");       
+            return false;
+        }
+        
+        if(valpassword==""){
+            alert("Password can not be empty");
+            return false;
+        }
+
+        // condition to check for white spaces in password
+        if(valpassword.indexOf(' ')>=0){
+            alert("\tInvalid Password !!\nCan not contain white space");
+            return false;
+        }
+
+        if(valpassword.length<8){
+            alert("Wrong Password");
+            return false;
+        }
+        if(!(valpassword.match(check))){
+            alert("Invalid Password !!");
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 
 </html>

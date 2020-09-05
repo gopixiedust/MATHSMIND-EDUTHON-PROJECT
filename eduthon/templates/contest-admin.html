@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <style>
+        .main{
+            font-size: 20px;
+        }
+        #qin{
+            width: 90%;
+            height: 100px;
+            font-size: 20px;
+        }
+        #name{
+            width: 50%;
+            height:100%;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <form method="POST">
+        <label for="qinn">Type name of Contest:</label>
+        <br>
+        <div class="ques">
+            <input type="text" name="contest_name">
+        </div>
+        <br><br>
+        <label for="qinn">Type number of  Questions:</label>
+        <br>
+        <div class="ques">
+            <input type="number" name="number_of_question">
+        </div>
+            <br><br>
+        <label for="qinn">Type your contest description(and Problem Setters):</label>
+        <br>
+        <div class="ques">
+            <textarea id="qin" name="description">
+            </textarea>
+        </div>
+        <br><br>
+        <div>
+            <input type="submit">
+        </div>
+        </form>
+    </div>
+</body>
+</html>
