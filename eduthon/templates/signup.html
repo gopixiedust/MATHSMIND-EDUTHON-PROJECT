@@ -67,6 +67,7 @@
         }
 
         header input {
+            width:170px;
             border: none;
             background: transparent;
             outline: none;
@@ -87,9 +88,12 @@
             padding-top: 8px;
             padding-bottom: 8px;
             outline: none;
-            background: rgb(252, 147, 252);
+            background: rgba(255, 77, 148,0.8);
+
             color: white;
             font-size: 12px;
+            font-weight: 550;
+            letter-spacing: 0.9px;
             border: none;
             transition: .5s;
             animation: headShake;
@@ -98,6 +102,14 @@
 
         header button:hover {
             transform: scale(1.2);
+            background: rgba(255, 77, 148,1.0);
+            box-shadow: 0 7px 20px rgba(255, 255, 255,0.6);
+            
+            cursor:pointer;
+        }
+        ::placeholder { 
+          font-size: 14px;
+          font-weight: 500;
         }
     </style>
 
@@ -112,21 +124,64 @@
             <hr>
             </hr>
             <br>
-            <form method = 'POST'>
-            <p><input type="text" placeholder="Username" name='username'></input></p>
+            <form  name="myform" onsubmit="return validateform()"  method = 'POST' autocomplete="off">
+            <p><input type="text" placeholder=" Username" name='username' required title="Must start with alphabet and should not contain white spaces"></input></p>
             <br>
-            <p><input type="text" placeholder="Your name" name="name"></input></p>
+            <p><input type="text" placeholder=" Full Name" name="fullname" required></input></p>
             <br>
-            <p><input type="email" placeholder="Email" name='email'></input></p>
+            <p><input type="email" placeholder=" Email" name='email' required ></input></p>
             <br>
-            <p><input type="password" placeholder="Password" name='password'></input></p>
+            <p><input type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 characters long" placeholder=" Password" name='password' required></input></p>
             <br>
-            <p><button type="submit" formmethod="post">Submit</button></p>
+            <p><input type="password" placeholder=" Confirm Password" name="cpassword" required></input></p>
+            <br>
+            <p><button type="submit" formmethod="post" value="Submit">SUBMIT</button></p>
             </form>
         </div>
     </header>
 
+<script>
+    {% if exist %}
+    alert("Username already exist or email already taken")
+    {% endif %}
+    function validateform(){
+        var letters=/^[a-zA-Z]+$/;
+        var valusername=document.forms["myform"]["username"].value;         
+        var valpassword=document.forms["myform"]["password"].value;         
+        var valcpassword=document.forms["myform"]["cpassword"].value;       
 
+        if(valusername==""){
+            alert("Username can not be empty");
+            return false;
+        }
+
+        if(valusername.indexOf(' ')>=0){
+            alert("Username can not contain white space");
+            return false;
+        }
+
+        if(!(valusername[0].match(letters))){
+            alert("Username should start with Alphabet");     
+            return false;
+        }
+        
+        if(valpassword==""){
+            alert("Password can not be empty");
+            return false;
+        }
+
+        if(valpassword.indexOf(' ')>=0){
+            alert("Password can not contain white space");
+            return false;
+        }
+
+        if(!(valpassword===valcpassword)){
+            alert("Confirm Password does not matches with the provided password");
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 
 </html>

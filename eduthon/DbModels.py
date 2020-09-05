@@ -41,9 +41,16 @@ class User(UserMixin,db.Model):
     password = db.Column(db.String(128))
     contests_given = db.relationship('Contest_user', backref = 'user',lazy='dynamic')
     score = db.Column(db.Integer,default=0)
-    grank = db.Column(db.Integer,default=1)
+    grank = db.Column(db.Integer,default=0)
     def set_password(self,password):
         self.password = generate_password_hash(password)
     
     def check_password(self,password):
         return check_password_hash(self.password,password)
+
+class Practice_question(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.String(100),unique = True)
+    question_text = db.Column(db.String(500),unique=False)
+    answer = db.Column(db.Float , unique = False)
+    contest_name = db.Column(db.String(100))

@@ -10,8 +10,9 @@ db = SQLAlchemy(app)
 login = LoginManager()
 login.init_app(app)  
 app.secret_key = 'itsmathtime'
+admin_password = 'guruji'
 
-from DbModels import Question,User,Contest,Contest_user,Question_user
+from DbModels import Question,User,Contest,Contest_user,Question_user,Practice_question
 
 
 @login.user_loader
@@ -21,8 +22,10 @@ def load_user(id):
 
 @app.route('/')
 def landing():
-    return redirect(url_for('register'))
-
+    if current_user.is_authenticated:
+        return render_template('Homepage.html',current_user=current_user,username = User.query.get(current_user.get_id()).name)
+    else:
+        return render_template('Homepage.html',current_user=current_user)
 
 @app.route('/index')
 @login_required
@@ -59,6 +62,7 @@ def home(Cid):
 
 @app.route("/question/<int:my_id>", methods = ['GET','POST'])
 def question(my_id):
+    ans=0
     ques = Question.query.get(Question_user.query.get(my_id).question_id)
     if request.method == 'POST':
         ans = request.form['answer']
@@ -75,9 +79,11 @@ def question(my_id):
                     if participants[i].marks!=participants[i+1].marks:
                         j=i+2
             db.session.commit()
-            return "RIGHT ANSWER"
+            ans = 1
+        else:
+            ans = -1
 
-    return render_template("problem.html",text=ques.question_text,name = ques.name,contest = Contest.query.get(ques.contest_id))
+    return render_template("problem.html",text=ques.question_text,name = ques.name,contest = Contest.query.get(ques.contest_id),response = ans)
 
 
 @app.route('/leaderboard/<int:Cid>')
@@ -90,40 +96,43 @@ def leaderboard(Cid):
 
 @app.route('/register',methods=['GET', 'POST'])
 def register():
+    exist = False
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     if request.method == 'POST':
-        user = User(username=request.form['username'], email=request.form['email'],name=request.form['name'])
+        user = User(username=request.form['username'], email=request.form['email'],name=request.form['fullname'])
         user.set_password(request.form['password'])
         try:
             db.session.add(user)
             db.session.commit()
+            login_user(user)
+            return redirect(url_for('landing'))
         except:
-            return redirect(url_for('register'))
-        login_user(user)
-        return redirect(url_for('index'))
-    return render_template('signup.html')
+            exist=True
+    return render_template('signup.html',exist=exist)
 
 
 
 @app.route('/login',methods = ['GET','POST'])
 def loginUser():
+    exist = False
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     if request.method == 'POST':
         user = User.query.filter(User.username == request.form['username']).first()
         if user is None or not user.check_password(request.form['password']):
-            return redirect(url_for('loginUser'))
-        login_user(user)
-        return redirect(url_for('index'))
-    return render_template('login.html')
+            exist = True
+        else:
+            login_user(user)
+            return redirect(url_for('landing'))
+    return render_template('login.html',exist = exist)
 
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('loginUser'))
+    return redirect(url_for('landing'))
 
 
 
@@ -132,6 +141,8 @@ def logout():
 @app.route('/admin/contest',methods = ['GET','POST'])
 @login_required
 def contest_admin():
+    if User.query.get(current_user.get_id()).username != admin_password:
+        return redirect(url_for('landing'))
     if request.method == 'POST':
         contest = Contest(name=request.form["contest_name"],number_of_question =int( request.form["number_of_question"]),description = request.form["description"])
         db.session.add(contest)
@@ -145,6 +156,8 @@ def contest_admin():
 @app.route('/admin/question/<int:p_id>',methods = ['GET','POST'])
 @login_required
 def question_admin(p_id):
+    if User.query.get(current_user.get_id()).username != admin_password:
+        return redirect(url_for('landing'))
     contest =Contest.query.get(p_id)
     if len(contest.questions.all()) >= contest.number_of_question:
         return redirect(url_for('index'))
@@ -167,7 +180,16 @@ def unauthorized():
 
 
 @app.route('/del/<int:Cid>')
+@login_required
 def delete(Cid):
+    if User.query.get(current_user.get_id()).username != admin_password:
+        return redirect(url_for('landing'))
+    questions_p = Question.query.filter(Contest.id == Cid).all()
+    con_name = Contest.query.get(Cid).name
+    for i in questions_p:
+        quest = Practice_question(name = i.name,question_text = i.question_text,answer = i.answer,contest_name = con_name)
+        db.session.add(quest)
+        db.session.commit()
     participants = Contest_user.query.filter(Contest_user.contest_id == Cid).all()
     for i in participants:
         User.query.get(i.user_id).score+=i.marks
@@ -175,7 +197,7 @@ def delete(Cid):
     db.session.commit()
     db.session.delete(Contest.query.get(Cid))
     db.session.commit()
-    participants = User.query.all()
+    participants = User.query.order_by(User.score.desc()).all()
     j=1
     for i in range(0,len(participants)):
         participants[i].grank = j
@@ -184,3 +206,39 @@ def delete(Cid):
                 j=i+2
     db.session.commit()
     return redirect(url_for('index'))
+
+
+@app.route('/practice/<int:page>')
+@login_required
+def practice(page):
+    questions = Practice_question.query.filter(Practice_question.id> (page-1)*10).filter(Practice_question.id<=page*10).all()
+    pages = ((len(Practice_question.query.all())-1)//10)+1
+    return render_template('Practice.html',questions=questions,page = page,pages = pages)
+
+
+@app.route('/practice/question/<int:Qid>',methods = ['GET','POST'])
+@login_required
+def p_question(Qid):
+    ans=0
+    ques = Practice_question.query.get(Qid)
+    if request.method == 'POST':
+        ans = request.form['answer']
+        if float(ans) == ques.answer:
+            ans=1
+        else:
+            ans=-1
+
+    return render_template("problem.html",text=ques.question_text,name = ques.name,contest = 'PRACTICE',response = ans)
+
+
+
+@app.route('/standings')
+def standings():
+    participants = User.query.filter(User.grank>=1).filter(User.grank<=5).order_by(User.score.desc()).all()
+    return render_template("standings.html",topper=participants)
+
+
+
+@app.errorhandler(500)
+def internal_error(e):
+    return "<center>contest may be ended or some internal server error</center>"

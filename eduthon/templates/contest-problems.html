@@ -118,13 +118,27 @@
 				text-align: left;
 			}
 		}
+			#tohover1{
+		        font-size:20px;
+		        transform: scale(1.1);
+		        color: rgba(255, 77, 148,0.8);
+		        letter-spacing: 1px;
+	        }
+	        #tohover2{
+	            font-size:20px;
+	            letter-spacing: 1px;
+	        }
+	        #tohover2:hover{
+	            transform: scale(1.1);
+	            color: rgba(255, 77, 148,0.8);
+	        }			
 	</style>
 </head>
 <nav id="sideNav">
 	<ul>
 		<li><a href="/">HOME</a></li>
 		<li><a href="/index">CONTEST</a></li>
-		<li><a href="#">PRACTICE</a></li>
+		<li><a href="/practice/1">PRACTICE</a></li>
 		<li><a href="#">LEADERBOARD</a></li>
 		<li><a href="/logout">LOGOUT</a></li>
 	</ul>
@@ -154,10 +168,10 @@
 	<div class="collapse navbar-collapse" id="navbarText">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item active">
-				<a class="nav-link" href="#">Contest Page<span class="sr-only">(current)</span></a>
+				<a class="nav-link" href="#" id="tohover1">Contest Page<span class="sr-only">(current)</span></a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="/leaderboard/{{contest.id}}">Leaderboard</a>
+				<a class="nav-link" id="tohover2" href="/leaderboard/{{contest.id}}">Leaderboard</a>
 			</li>
 			<!-- <li class="nav-item">
 				<a class="nav-link" href="#">kya hiii</a>
