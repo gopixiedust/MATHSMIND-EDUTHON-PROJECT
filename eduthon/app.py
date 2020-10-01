@@ -241,4 +241,4 @@ def standings():
 
 @app.errorhandler(500)
 def internal_error(e):
-    return "<center>contest may be ended or some internal server error</center>"
+    return "<center>***contest may be ended or some internal server error***</center>"
