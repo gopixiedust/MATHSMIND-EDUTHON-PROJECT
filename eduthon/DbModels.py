@@ -25,6 +25,7 @@ class Contest_user(db.Model):
     questions = db.relationship('Question_user',backref= 'contest_user',lazy='dynamic',cascade = 'all, delete, delete-orphan')
     marks = db.Column(db.Integer,default = 0)
     rank = db.Column(db.Integer,default=1)
+#add another step here;
 
 class Question_user(db.Model):
     id = db.Column(db.Integer,primary_key = True)
