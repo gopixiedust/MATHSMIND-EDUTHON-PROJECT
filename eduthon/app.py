@@ -33,7 +33,7 @@ def index():
     return render_template("contestsinfo.html",contest=Contest.query.all())
 
 
-
+#asdfasdf
 @app.route('/contest/<int:Cid>')
 @login_required
 def home(Cid):
